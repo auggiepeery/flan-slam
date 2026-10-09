@@ -55,6 +55,13 @@ It downloads `cloudflared` to `bin/` if it's missing. Quick-tunnel URLs are **te
 ### Static client (GitHub Pages)
 `.github/workflows/pages.yml` publishes `public/` to GitHub Pages. Solo vs AI always works there. For multiplayer, the static site connects to the server in `public/config.js` (`PAGES_SERVER`; `start.sh` rewrites it, then commit + push), or to a server you choose per visit: `https://<pages-site>/?server=https://your-server.example`. For multiplayer that's always on, host `server.js` somewhere permanent (any Node host that supports WebSockets, e.g. Render, Fly.io, Railway).
 
+### Permanent server on Render (free)
+The repo is ready for Render: `render.yaml` is a Blueprint for a free Node web service named `flan-slam`. It uses `npm ci` and `npm start` and health-checks `/healthz`. The server listens on `$PORT` and binds `0.0.0.0`.
+1. In the Render dashboard choose **New → Blueprint**, connect GitHub, pick `auggiepeery/flan-slam` and **Apply**. Or choose **New → Web Service** with the same repo and settings.
+2. When it's live, put its URL (e.g. `https://flan-slam.onrender.com`) in `PAGES_SERVER` in `public/config.js`, then commit and push.
+
+The server accepts WebSocket and CORS requests only from `ALLOWED_ORIGINS` (default `https://auggiepeery.github.io`, comma-separated, `*` for any) and from its own origin. Free instances sleep after about 15 minutes idle. The Pages client starts waking the server when the page loads, shows a "Waking the server, ~30s" notice and keeps retrying for up to 100 s instead of failing. `node deploytest.js` tests all of this locally.
+
 ## Code layout
 - `public/core.js`: shared game core (rooms, physics, scoring, AI bots). Used by both the server and the browser's solo mode.
 - `server.js`: HTTP + WebSocket server (`ws`).

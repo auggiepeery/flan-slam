@@ -35,6 +35,12 @@
       <button id="btn-join">Join</button>
     </div>
     <div id="err" class="err"></div>
+    <div id="wake" class="wake hidden" role="status" aria-live="polite">
+      <div class="wake-spin">☕</div>
+      <div><b>Waking the server, ~30s…</b> <span id="wake-t" class="wake-t">0s</span><br>
+      <small>The free multiplayer server naps when nobody's playing. Hang tight, it reconnects automatically. Or play vs AI below meanwhile.</small></div>
+      <button id="btn-wake-cancel" class="ghost sm" type="button">Cancel</button>
+    </div>
     <div class="or">— or play solo, works offline —</div>
     <div class="solo-box">
       <div class="solo-row"><span>🤖 Bots</span>

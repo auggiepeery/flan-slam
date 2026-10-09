@@ -100,15 +100,61 @@ function serverWsUrl() {
   if (base) return base.replace(/^http/, 'ws') + '/ws';
   return (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws';
 }
-function connect(first) {
-  stopSolo();
-  if (ws) { leaving = true; try { ws.close(); } catch {} }
-  leaving = false; INTERP = 110;
-  ws = new WebSocket(serverWsUrl());
-  ws.onopen = () => send(first);
-  ws.onclose = () => { if (leaving) return; if (myId) { toast('Disconnected — reload to rejoin'); showScreen('landing'); err('Disconnected from server. Try joining again.'); myId = null; $('hud').classList.add('hidden'); } else err('Could not reach the multiplayer server — try “Play vs AI” instead!'); };
-  ws.onmessage = e => onMsg(JSON.parse(e.data));
+function serverHttpBase() { return serverWsUrl().replace(/^ws/, 'http').replace(/\/ws$/, ''); }
+// Free hosts (Render) put the server to sleep when idle; the first connection can take ~30-60s while it boots.
+// Instead of failing, keep poking /healthz and retrying the socket, with a friendly "waking" notice.
+const WAKE_LIMIT = 100000, OPEN_TIMEOUT = 9000;
+let conn = null;
+function wakePing() { try { fetch(serverHttpBase() + '/healthz', { cache: 'no-store', mode: 'cors' }).catch(() => {}); } catch {} }
+function cancelConnect(closeSock) {
+  if (conn) { clearTimeout(conn.retry); clearInterval(conn.tick); conn = null; }
+  $('wake').classList.add('hidden');
+  if (closeSock && ws) { leaving = true; try { ws.close(); } catch {} ws = null; }
 }
+function showWaking() {
+  const c = conn; if (!c || c.tick) return;
+  $('wake').classList.remove('hidden'); err('');
+  const upd = () => { const s = Math.round((Date.now() - c.start) / 1000); $('wake-t').textContent = s + 's'; };
+  upd(); c.tick = setInterval(upd, 500);
+}
+function connect(first) {
+  stopSolo(); cancelConnect(true);
+  conn = { first, start: Date.now(), tries: 0, tick: null, retry: null };
+  attempt(conn);
+}
+function attempt(c) {
+  if (conn !== c) return;
+  c.tries++; leaving = false; INTERP = 110;
+  let opened = false, sock;
+  try { sock = new WebSocket(serverWsUrl()); } catch { err('Bad server address'); cancelConnect(); return; }
+  ws = sock;
+  const hung = setTimeout(() => { if (!opened) try { sock.close(); } catch {} }, OPEN_TIMEOUT);
+  sock.onopen = () => {
+    opened = true; clearTimeout(hung);
+    if (conn !== c) { try { sock.close(); } catch {} return; }
+    cancelConnect(); send(c.first);
+  };
+  sock.onmessage = e => { if (ws === sock) onMsg(JSON.parse(e.data)); };
+  sock.onclose = () => {
+    clearTimeout(hung);
+    if (!opened) {
+      if (conn !== c) return;
+      if (ws === sock) ws = null;
+      if (Date.now() - c.start < WAKE_LIMIT) {
+        if (!c.tick) showWaking();
+        wakePing();
+        c.retry = setTimeout(() => attempt(c), Math.min(1000 * c.tries, 4000));
+      } else { cancelConnect(); err('The multiplayer server didn\u2019t wake up \u2014 try again in a minute, or “Play vs AI”!'); }
+      return;
+    }
+    if (leaving || ws !== sock) return;
+    if (myId) { toast('Disconnected — reload to rejoin'); showScreen('landing'); err('Disconnected from server. Try joining again.'); myId = null; $('hud').classList.add('hidden'); }
+    else err('Lost the connection to the multiplayer server — try again, or “Play vs AI”!');
+  };
+}
+$('btn-wake-cancel').onclick = () => { cancelConnect(true); err(''); };
+// On a static host (GitHub Pages) start waking a sleeping server as soon as the page loads.
+if (window.FLAN_SERVER && navigator.onLine !== false) setTimeout(wakePing, 300);
 function onMsg(m) {
   if (m.t === 'error') { err(m.msg); return; }
   if (m.t === 'welcome') {
@@ -260,13 +306,14 @@ for (const b of document.querySelectorAll('[data-addbot]')) b.onclick = () => { 
 document.addEventListener('click', e => { const k = e.target.closest('[data-kick]'); if (k) send({ t: 'removebot', id: +k.dataset.kick }); });
 for (const b of document.querySelectorAll('[data-leave]')) b.onclick = leaveGame;
 function leaveGame() {
-  stopSolo();
+  stopSolo(); cancelConnect();
   if (ws) { leaving = true; try { ws.close(); } catch {} ws = null; }
   myId = null; room = null; snaps = []; $('hud').classList.add('hidden'); $('touch').classList.add('hidden');
   document.body.classList.remove('solo');
   showScreen('landing'); err('');
 }
 function startSolo(n, diff) {
+  cancelConnect();
   if (ws) { leaving = true; try { ws.close(); } catch {} ws = null; }
   stopSolo();
   const name = nameEl.value.trim() || 'You';

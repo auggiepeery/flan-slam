@@ -1,0 +1,19 @@
+# Render Blueprint for the Flan Slam multiplayer server (free web service).
+# Dashboard: New → Blueprint → pick the auggiepeery/flan-slam repo → Apply.
+services:
+  - type: web
+    name: flan-slam
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # Browser origins allowed to connect cross-origin (the GitHub Pages client). Comma-separated; "*" = any.
+      - key: ALLOWED_ORIGINS
+        value: https://auggiepeery.github.io
