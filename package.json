@@ -1,0 +1,16 @@
+{
+  "name": "flan-slam",
+  "version": "1.1.0",
+  "description": "Flan Slam: a silly real-time multiplayer party game. Wobbly flans dash and slam each other off a shrinking cake. 1-8 players, solo vs AI works offline.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js && node bottest.js",
+    "test:ai": "node simtest.js",
+    "test:browser": "node solotest.js && node browsertest.js"
+  },
+  "keywords": ["game", "multiplayer", "websocket", "party", "canvas"],
+  "license": "MIT",
+  "dependencies": { "ws": "^8.22.0" },
+  "devDependencies": { "playwright-core": "^1.64.0" }
+}

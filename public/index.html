@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Flan Slam 🍮 — slam your friends off the cake!</title>
+<meta name="description" content="Flan Slam: a silly real-time party game for 1-8 players. Wobbly flans, a shrinking cake, one winner. Play with friends via a link or solo vs AI.">
+<meta name="theme-color" content="#1b1446">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍮</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<!-- landing -->
+<div id="landing" class="screen show">
+  <div class="card">
+    <h1 class="logo"><span>FLAN</span><span>SLAM!</span></h1>
+    <p class="tag">Wobble. Dash. <b>Slam your friends off the cake.</b></p>
+    <label>Your nickname<input id="name" maxlength="14" placeholder="e.g. Wobbles" autocomplete="off"></label>
+    <div id="joinbox-link" class="hidden">
+      <button id="btn-joinlink" class="big go">Join room <b id="linkcode"></b></button>
+      <div class="or">or</div>
+    </div>
+    <button id="btn-create" class="big">✨ Create a room</button>
+    <div class="row">
+      <input id="code" maxlength="4" placeholder="CODE" autocomplete="off">
+      <button id="btn-join">Join</button>
+    </div>
+    <div id="err" class="err"></div>
+    <div class="or">— or play solo, works offline —</div>
+    <div class="solo-box">
+      <div class="solo-row"><span>🤖 Bots</span>
+        <span class="stepper"><button id="bot-minus" type="button">−</button><b id="bot-n">3</b><button id="bot-plus" type="button">+</button></span></div>
+      <div class="solo-row"><span>Difficulty</span>
+        <span id="diffs" class="seg"><button data-d="easy" type="button">Easy</button><button data-d="normal" type="button">Normal</button><button data-d="hard" type="button">Hard</button></span></div>
+      <button id="btn-solo" class="big ai">🤖 Play vs AI</button>
+    </div>
+    <div class="howto">
+      <b>How to play</b> · Move: <kbd>WASD</kbd>/<kbd>↑↓←→</kbd> or hold mouse · Dash: <kbd>Space</kbd>/<kbd>Shift</kbd>/right-click ·
+      📱 Left thumb = joystick, right = DASH. Knock others off the shrinking cake. Last flan standing wins (+3), each knockout +1.
+    </div>
+  </div>
+</div>
+
+<!-- lobby -->
+<div id="lobby" class="screen">
+  <div class="card">
+    <div class="small">ROOM CODE</div>
+    <div id="lb-code" class="bigcode">----</div>
+    <div class="share">
+      <input id="lb-link" readonly>
+      <button id="btn-copy">Copy link</button>
+    </div>
+    <div class="small" id="lb-count">Players</div>
+    <ul id="lb-players" class="plist"></ul>
+    <button id="btn-start" class="big go hidden">▶ Start round</button>
+    <div class="botrow botctl hidden"><button data-addbot type="button">＋ Add 🤖 bot</button><select><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select></div>
+    <div class="botfull hidden small">Room full (8/8) — ✕ a bot to make space</div>
+    <div id="lb-wait" class="waiting">Waiting for the host to start…</div>
+    <button data-leave class="ghost" type="button">← Leave room</button>
+    <div class="howto">Move with <kbd>WASD</kbd>/arrows (or hold mouse / left-thumb joystick). <kbd>Space</kbd> or the DASH button to dash-bonk. Don't fall in the soup!</div>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="hud-left"><span id="hud-code"></span> · Round <span id="hud-round"></span> · <span id="hud-alive"></span></div>
+  <ol id="hud-score"></ol>
+  <div id="feed"></div>
+  <div id="center"></div>
+  <div id="spectate" class="hidden">You joined mid-round — you'll jump in next round! 👀</div>
+</div>
+
+<!-- round over -->
+<div id="over" class="screen">
+  <div class="card">
+    <div id="ov-title" class="wintitle"></div>
+    <ol id="ov-score" class="plist score"></ol>
+    <button id="btn-next" class="big go hidden">▶ Next round</button>
+    <div id="ov-wait" class="waiting">Waiting for the host…</div>
+    <div class="botrow botctl hidden"><button data-addbot type="button">＋ Add 🤖 bot</button><select><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select></div>
+    <div class="botfull hidden small">Room full (8/8) — ✕ a bot to make space</div>
+    <div class="ovfoot"><button id="btn-lobby-copy" class="ghost mp-only" type="button">🔗 Copy invite link</button><button data-leave class="ghost" type="button">← Menu</button></div>
+  </div>
+</div>
+
+<!-- touch controls -->
+<div id="touch" class="hidden">
+  <div id="stick"><div id="knob"></div></div>
+  <button id="dashbtn">DASH</button>
+</div>
+<div id="toast"></div>
+<script src="config.js"></script>
+<script src="core.js"></script>
+<script src="game.js"></script>
+<script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+</body>
+</html>

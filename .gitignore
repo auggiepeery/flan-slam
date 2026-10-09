@@ -1,0 +1,7 @@
+node_modules/
+bin/
+logs/
+url.txt
+*.log
+.env
+shots/
