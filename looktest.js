@@ -37,12 +37,19 @@ const res = []; const ok = (c, m) => { res.push(c); console.log((c ? 'PASS ' : '
   await d.evaluate(() => document.querySelector('[data-leave]').click());
   await d.waitForSelector('#landing.show');
   await d.fill('#name', 'Kingsley'); await d.click('#btn-create'); await d.waitForSelector('#lobby.show', { timeout: 15000 }).catch(async e => { console.log('err text:', await d.textContent('#err'), await d.$eval('#landing', x => x.className)); throw e; }); const code = await d.textContent('#lb-code');
+  const fsz = await d.$eval('#lb-code', e => parseFloat(getComputedStyle(e).fontSize));
+  ok(/^[A-Z]{4}$/.test(code) && fsz >= 60, `lobby shows room code ${code} large (${fsz}px) with copy-code button: ${!!(await d.$('#btn-copy-code'))}`);
+  ok(await d.evaluate(() => FlanCore.C.DASH_CD) === 0.75, 'client core has 0.75s dash cooldown');
+  await d.screenshot({ path: `${out}/lobby-desktop.png` });
   const mctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   const m = await mctx.newPage(); m.on('pageerror', e => errs.push('phone: ' + e.message));
   await m.goto(URL + '/?room=' + code); await m.waitForTimeout(500);
   await m.tap('[data-char="ninja"]'); await m.tap('[data-color="#ffd23f"]');   // same colour as host -> server must adjust
   await m.fill('#name', 'Nina'); await m.screenshot({ path: `${out}/picker-phone.png` });
   await m.tap('#btn-joinlink'); await m.waitForSelector('#lobby.show');
+  await m.waitForTimeout(400); await m.screenshot({ path: `${out}/lobby-phone.png` });
+  const mfs = await m.$eval('#lb-code', e => [e.textContent, parseFloat(getComputedStyle(e).fontSize), e.getBoundingClientRect().right <= innerWidth]);
+  ok(mfs[0] === code && mfs[1] >= 50 && mfs[2], `phone lobby shows code ${mfs[0]} at ${mfs[1]}px, fits on screen`);
   const ws = new WebSocket(SERVER.replace(/^http/, 'ws') + '/ws'); await new Promise(r => ws.on('open', r));
   ws.send(JSON.stringify({ t: 'join', name: 'Hacker', code, char: '<img onerror=alert(1)>', color: 'javascript:red' }));
   await d.click('#lobby [data-addbot]'); await d.click('#lobby [data-addbot]'); await d.click('#lobby [data-addbot]');
@@ -65,6 +72,8 @@ const res = []; const ok = (c, m) => { res.push(c); console.log((c ? 'PASS ' : '
   await d.click('#btn-start'); await d.waitForTimeout(6500);
   await d.screenshot({ path: `${out}/chars-mp-desktop.png` }); await m.screenshot({ path: `${out}/chars-mp-phone.png` });
   ok(await m.$$eval('#hud-score img', l => l.length) >= 5, 'phone HUD renders character icons in multiplayer');
+  const hudc = await m.$eval('#hud-room', e => [document.getElementById('hud-code').textContent, getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0]);
+  ok(hudc[0] === code && hudc[1], `room code ${hudc[0]} visible in the in-game HUD (phone)`);
   ok(!errs.length, 'no page errors' + (errs.length ? ': ' + errs.join('; ') : ''));
   await browser.close();
   console.log(`\n${res.filter(Boolean).length}/${res.length} checks passed`); process.exit(res.every(Boolean) ? 0 : 1);

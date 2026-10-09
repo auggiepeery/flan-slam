@@ -7,7 +7,7 @@
 'use strict';
 // v2 tuning ("too easy to stay on"): icier movement, harder hits, faster shrink, hazards + power-ups.
 const C = { TICK: 60, SNAP: 30, MAX_PLAYERS: 8, R: 26, ACC: 1350, FRICTION: 2.0, MAXV: 345,
-  DASH_V: 760, DASH_CD: 1.5, DASH_T: 0.22, ARENA_START: 430, ARENA_MIN: 105, SHRINK_DELAY: 8, SHRINK_TIME: 40, SUDDEN_RATE: 9, COUNTDOWN: 3,
+  DASH_V: 700, DASH_CD: 0.75, DASH_T: 0.22, DASH_MASS: 1.9, ARENA_START: 430, ARENA_MIN: 105, SHRINK_DELAY: 8, SHRINK_TIME: 40, SUDDEN_RATE: 9, COUNTDOWN: 3,
   RIM: 34, RIM_PULL: 260,             // frosting slope: outer band gently pulls you outward
   RESTITUTION: 1.0, HIT_SCALE: 0.0004, // bounce grows with impact speed
   SYRUP_FRICTION: 0.25, SYRUP_CONTROL: 0.4, WIND_F: 560, MEGA_T: 5, MEGA_MASS: 1.6,
@@ -386,7 +386,7 @@ function step(room) {
     if (d === 0) { a.x -= 1; continue; }
     if (d >= C.R * 2) continue;
     const nx = dx / d, ny = dy / d, overlap = C.R * 2 - d;
-    const ma = (a.dashT > 0 ? 2.2 : 1) * (a.mega > 0 ? C.MEGA_MASS : 1), mb = (b.dashT > 0 ? 2.2 : 1) * (b.mega > 0 ? C.MEGA_MASS : 1);
+    const ma = (a.dashT > 0 ? C.DASH_MASS : 1) * (a.mega > 0 ? C.MEGA_MASS : 1), mb = (b.dashT > 0 ? C.DASH_MASS : 1) * (b.mega > 0 ? C.MEGA_MASS : 1);
     a.x -= nx * overlap * (mb / (ma + mb)); a.y -= ny * overlap * (mb / (ma + mb));
     b.x += nx * overlap * (ma / (ma + mb)); b.y += ny * overlap * (ma / (ma + mb));
     const rv = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;

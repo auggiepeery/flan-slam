@@ -1,7 +1,7 @@
 # 🍮 Flan Slam
 
-**Wobbly flans. A shrinking cake. One winner.**
-Flan Slam is a silly real-time party game for 1–8 players. Everyone is a squishy flan on a giant sprinkle cake floating in soup — dash into your friends to send them flying off the edge while the cake crumbles away beneath you. Rounds last about 20–25 seconds and scores carry across rounds.
+**Wobbly flans. A shrinking beach island. One winner.**
+Flan Slam is a silly real-time party game for 1–8 players. Everyone is a squishy flan on a little sandy beach island — dash into your friends to send them flying into the sea while the island shrinks and the sand collapses beneath you. Rounds last about 20–25 seconds and scores carry across rounds.
 
 Play with friends by sharing one link, or solo against AI bots (works offline once the page has loaded).
 
@@ -9,26 +9,26 @@ Play with friends by sharing one link, or solo against AI bots (works offline on
 | | Desktop | Phone |
 |---|---|---|
 | Move | `WASD` / arrow keys, or hold the mouse button (you move toward the cursor) | Left thumb anywhere → floating joystick |
-| Dash | `Space` / `Shift` / right-click (1.6 s cooldown, ring around your flan) | **DASH** button (or tap the right side) |
+| Dash | `Space` / `Shift` / right-click (0.75 s cooldown, ring around your flan) | **DASH** button (or tap the right side) |
 
-- Knock the others off the cake before the cake (and its hazards) knocks you off. Rounds last about 20–25 s.
+- Knock the others into the sea before the island (and its hazards) does it to you. Rounds last about 20–25 s.
 - **Last flan standing: +3 points. Each knockout: +1** (if you were the last to bump them).
-- Dashing makes you heavier: a dash into someone sends them flying… and a miss can send *you* into the soup.
+- Dashing makes you heavier: a dash into someone sends them flying… and a miss can send *you* into the sea.
 
 ### Hazards & power-ups (telegraphed, then live)
-- ⚠️ **Crumbling chunks**: a wedge of the rim flashes red with cracks for 1.6 s, then breaks off for the rest of the round.
-- 🥄 **Giant spoon**: a shadow arm and rotation arrow show for 1.5 s, then a spoon sweeps around the cake for about 3.6 s and shoves anyone in its path. It can't reach the very middle (the hub).
-- 🍯 **Syrup puddles**: inside one you have very little grip or control, and they last 9 s.
-- 💨 **Gusts**: arrows show the direction for 1.4 s, then the wind blows everyone that way for 2.2 s.
-- ⭐ **Mega-Slam star**: grab it for 5 s of extra slam weight and a half-length dash cooldown (you get a golden aura).
-- The outer frosting band is a **slope** that pulls you outward, the cake starts shrinking at 8 s, and in **sudden death** it keeps crumbling until somebody falls.
+- ⚠️ **Collapsing sand**: a wedge of the shore flashes red with cracks for 1.6 s, then collapses into the water for the rest of the round.
+- 🏖️ **Giant beach shovel**: a shadow arm and rotation arrow show for 1.5 s, then a shovel sweeps around the island for about 3.6 s and shoves anyone in its path. It can't reach the very middle (the hub).
+- 🌿 **Seaweed slicks** (tide pools): inside one you have very little grip or control, and they last 9 s.
+- 🌬️ **Sea breezes**: arrows show the direction for 1.4 s, then the wind blows everyone that way for 2.2 s.
+- ⭐ **Mega-Slam starfish**: grab it for 5 s of extra slam weight and a half-length dash cooldown (you get a golden aura).
+- The darker **wet-sand band** at the edge is a slope that pulls you toward the surf. The island starts shrinking at 8 s, and in **sudden death** it keeps eroding until somebody falls.
 
 ### Characters & colours
 Pick your flan on the landing page: **Classic** (caramel top), **King Wobble** (crown, smug), **Ninja** (squarish, fluttering headband), **Party Animal** (party hat, big grin), **Shades** (sunglasses, smirk) and **Sprout** (jelly-mould shape, leaf, blush). Choose one of 16 palette colours or any colour with 🎨. Your choice is saved in your browser and synced to the room. The server checks every look and, if your colour is too close to someone else's, gives you the nearest clearly different one. Bots get random characters and colours. Looks are **cosmetic only**: every flan has the same size, speed and weight.
 
 ### Multiplayer
 1. Enter a nickname → **Create a room**. You get a 4-letter code and a share link (`…/?room=ABCD`).
-2. Friends open the link (or type the code) → **Join**. Up to 8 players; late joiners hop in next round.
+2. Friends open the link (or type the code) → **Join**. Up to 8 players; late joiners hop in next round. The code is shown big in the lobby (with a **Copy code** button) and stays in the corner during play and between rounds, so late joiners can hop in.
 3. The host (👑) presses **Start**. After each round the host starts the next one.
 4. The host can **＋ Add 🤖 bot** (easy / normal / hard) or ✕ remove bots in the lobby or between rounds to fill the room. If a human joins a full room, a bot makes way.
 

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Flan Slam 🍮 — slam your friends off the cake!</title>
-<meta name="description" content="Flan Slam: a silly real-time party game for 1-8 players. Wobbly flans, a shrinking cake, one winner. Play with friends via a link or solo vs AI.">
-<meta name="theme-color" content="#1b1446">
+<title>Flan Slam 🍮 — slam your friends off the island!</title>
+<meta name="description" content="Flan Slam: a silly real-time party game for 1-8 players. Wobbly flans, a shrinking beach island, one winner. Play with friends via a link or solo vs AI.">
+<meta name="theme-color" content="#0a6c8f">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍮</text></svg>">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -16,7 +16,7 @@
 <div id="landing" class="screen show">
   <div class="card">
     <h1 class="logo"><span>FLAN</span><span>SLAM!</span></h1>
-    <p class="tag">Wobble. Dash. <b>Slam your friends off the cake.</b></p>
+    <p class="tag">Wobble. Dash. <b>Slam your friends off the island.</b></p>
     <label>Your nickname<input id="name" maxlength="14" placeholder="e.g. Wobbles" autocomplete="off"></label>
     <div class="lookbox">
       <div class="lookhead"><b>Your flan:</b> <span id="char-name"></span> <span id="char-desc" class="cdesc"></span></div>
@@ -45,7 +45,7 @@
     </div>
     <div class="howto">
       <b>How to play</b> · Move: <kbd>WASD</kbd>/<kbd>↑↓←→</kbd> or hold mouse · Dash: <kbd>Space</kbd>/<kbd>Shift</kbd>/right-click ·
-      📱 Left thumb = joystick, right = DASH. Knock others off the shrinking cake. Watch out for ⚠️ crumbling chunks, the 🥄 giant spoon (hide in the middle!), 🍯 syrup, 💨 gusts; grab ⭐ for a Mega-Slam. Last flan standing wins (+3), each knockout +1.
+      📱 Left thumb = joystick, right = DASH. Knock others off the shrinking beach island. Watch out for ⚠️ collapsing sand, the 🏖️ giant beach shovel (hide in the middle!), 🌿 seaweed slicks, 🌬️ sea breezes; grab a ⭐ starfish for a Mega-Slam. Last flan standing wins (+3), each knockout +1.
     </div>
   </div>
 </div>
@@ -53,8 +53,12 @@
 <!-- lobby -->
 <div id="lobby" class="screen">
   <div class="card">
-    <div class="small">ROOM CODE</div>
-    <div id="lb-code" class="bigcode">----</div>
+    <div class="codebox">
+      <div class="codelabel">ROOM CODE</div>
+      <div id="lb-code" class="bigcode">----</div>
+      <button id="btn-copy-code" class="codecopy" type="button">📋 Copy code</button>
+      <div class="codehint">Friends tap <b>Join</b> and enter this code, or open the link below</div>
+    </div>
     <div class="share">
       <input id="lb-link" readonly>
       <button id="btn-copy">Copy link</button>
@@ -66,13 +70,13 @@
     <div class="botfull hidden small">Room full (8/8) — ✕ a bot to make space</div>
     <div id="lb-wait" class="waiting">Waiting for the host to start…</div>
     <button data-leave class="ghost" type="button">← Leave room</button>
-    <div class="howto">Move with <kbd>WASD</kbd>/arrows (or hold mouse / left-thumb joystick). <kbd>Space</kbd> or the DASH button to dash-bonk. Don't fall in the soup!</div>
+    <div class="howto">Move with <kbd>WASD</kbd>/arrows (or hold mouse / left-thumb joystick). <kbd>Space</kbd> or the DASH button to dash-bonk. Don't fall in the sea! 🌊</div>
   </div>
 </div>
 
 <!-- HUD -->
 <div id="hud" class="hidden">
-  <div id="hud-left"><span id="hud-code"></span> · Round <span id="hud-round"></span> · <span id="hud-alive"></span></div>
+  <div id="hud-left"><span id="hud-room" class="roompill mp-only">ROOM <b id="hud-code"></b></span><span class="hudinfo">Round <span id="hud-round"></span> · <span id="hud-alive"></span></span></div>
   <ol id="hud-score"></ol>
   <div id="feed"></div>
   <div id="center"></div>
@@ -83,6 +87,7 @@
 <!-- round over -->
 <div id="over" class="screen">
   <div class="card">
+    <div class="ovroom mp-only">Room code <b id="ov-code">----</b> <button id="btn-ov-copy-code" class="codecopy sm" type="button">📋</button></div>
     <div id="ov-title" class="wintitle"></div>
     <ol id="ov-score" class="plist score"></ol>
     <button id="btn-next" class="big go hidden">▶ Next round</button>
