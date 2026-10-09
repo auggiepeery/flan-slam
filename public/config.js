@@ -4,7 +4,7 @@
 //   (or open the site with ?server=https://your-server) when the server moves.
 // Solo "Play vs AI" never needs a server.
 (function () {
-  var PAGES_SERVER = 'https://sierra-saved-engagement-roberts.trycloudflare.com';
+  var PAGES_SERVER = 'https://examples-frames-fashion-subsequently.trycloudflare.com';
   var isStatic = /\.github\.io$/.test(location.hostname);
   window.FLAN_SERVER = window.FLAN_SERVER || (isStatic ? PAGES_SERVER : '');
 })();

@@ -1,6 +1,6 @@
 // Network-first service worker: the game (incl. solo vs AI) keeps working offline after one visit.
-const CACHE = 'flan-slam-v1';
-const ASSETS = ['./', './index.html', './style.css', './config.js', './core.js', './game.js'];
+const CACHE = 'flan-slam-v3';
+const ASSETS = ['./', './index.html', './style.css', './config.js', './core.js', './flans.js', './game.js'];
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {})); });
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {

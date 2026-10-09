@@ -30,7 +30,11 @@ for i in $(seq 1 20); do curl -fs "http://localhost:$PORT/health" >/dev/null && 
 curl -fs "http://localhost:$PORT/health" >/dev/null || { echo "Server failed to start; see logs/server.log"; exit 1; }
 # tunnel
 : > logs/tunnel.log
-nohup bin/cloudflared tunnel --url "http://localhost:$PORT" --no-autoupdate > logs/tunnel.log 2>&1 &
+# Some networks hand out fake DNS answers (198.18.x) for Cloudflare's edge; then dial known edge IPs directly.
+EDGE_ARGS=""
+EDGE_IP=$(getent hosts region1.v2.argotunnel.com | awk '{print $1; exit}')
+case "$EDGE_IP" in ""|198.18.*|198.19.*) EDGE_ARGS="--edge 198.41.192.67:7844 --edge 198.41.192.7:7844 --edge 198.41.200.13:7844 --edge 198.41.200.33:7844";; esac
+nohup bin/cloudflared tunnel --url "http://localhost:$PORT" --no-autoupdate --protocol "${TUNNEL_PROTOCOL:-http2}" $EDGE_ARGS > logs/tunnel.log 2>&1 &
 echo $! > logs/tunnel.pid
 URL=""
 for i in $(seq 1 60); do
@@ -40,6 +44,7 @@ done
 if [ -z "$URL" ]; then echo "Tunnel failed; see logs/tunnel.log"; exit 1; fi
 # wait until reachable through the tunnel
 for i in $(seq 1 40); do curl -fs "$URL/health" >/dev/null && break; sleep 1.5; done
+curl -fs "$URL/health" >/dev/null || { echo "Tunnel started ($URL) but is not reachable yet; see logs/tunnel.log"; }
 echo "$URL" > url.txt
 # point the static (GitHub Pages) build at the new server too (commit + push public/config.js to publish it)
 sed -i -E "s#var PAGES_SERVER = '[^']*'#var PAGES_SERVER = '$URL'#" public/config.js

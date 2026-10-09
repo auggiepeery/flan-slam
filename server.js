@@ -47,7 +47,7 @@ wss.on('connection', (ws) => {
         r = rooms.get(code);
         if (!r) return send({ t: 'error', msg: `Room ${code || '?'} not found` });
       } else return;
-      const p = Core.join(r, m.name, ws);
+      const p = Core.join(r, m.name, ws, { char: m.char, color: m.color });
       if (typeof p === 'string') return send({ t: 'error', msg: p });
       room = r; me = p;
       send({ t: 'welcome', id: me.id, code: room.code });

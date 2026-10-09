@@ -18,7 +18,7 @@ const bots = c => c.room.players.filter(p => p.bot);
   const G = await client('Guest'); G.send({ t: 'join', name: 'Guesty', code: H.code }); await H.wait(() => H.room.players.length === 2);
   G.send({ t: 'addbot', diff: 'hard' }); await sleep(700); ok(bots(H).length === 0, 'non-host cannot add bots');
   H.send({ t: 'addbot', diff: 'easy' }); H.send({ t: 'addbot', diff: 'normal' }); H.send({ t: 'addbot', diff: 'hard' });
-  await H.wait(() => bots(H).length === 3);
+  await H.wait(() => bots(H).length === 3 && G.room && bots(G).length === 3);
   ok(bots(G).length === 3 && bots(H).every(b => b.name.startsWith('🤖')), 'host added 3 bots (easy/normal/hard), names have 🤖, guest sees them: ' + bots(H).map(b => `${b.name}[${b.diff}]`).join(', '));
   const rm = bots(H)[0].id; H.send({ t: 'removebot', id: rm }); await H.wait(() => !H.room.players.some(p => p.id === rm));
   ok(bots(H).length === 2, 'host removed a bot');
@@ -42,8 +42,8 @@ const bots = c => c.room.players.filter(p => p.bot);
   ok(true, `round 2 ended; winner ${H.overs[1].name}`);
   ok(H.room.round === 2 && H.room.players.some(p => p.score > 0), 'scores carry across rounds');
   // humans leave -> room should be disposed even though bots remain
-  for (const c of [H, G, L]) c.ws.close(); await sleep(800);
-  const health = await (await fetch(BASE + '/health')).json();
+  for (const c of [H, G, L]) c.ws.close();
+  let health; for (let i = 0; i < 40; i++) { await sleep(1000); health = await (await fetch(BASE + '/health')).json(); if (health.rooms === 0) break; }
   ok(health.rooms === 0, 'room with only bots left is cleaned up (rooms=' + health.rooms + ')');
   console.log(`\n${res.filter(Boolean).length}/${res.length} checks passed`); process.exit(res.every(Boolean) ? 0 : 1);
 })().catch(e => { console.error(e); process.exit(1); });

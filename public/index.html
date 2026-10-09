@@ -18,6 +18,13 @@
     <h1 class="logo"><span>FLAN</span><span>SLAM!</span></h1>
     <p class="tag">Wobble. Dash. <b>Slam your friends off the cake.</b></p>
     <label>Your nickname<input id="name" maxlength="14" placeholder="e.g. Wobbles" autocomplete="off"></label>
+    <div class="lookbox">
+      <div class="lookhead"><b>Your flan:</b> <span id="char-name"></span> <span id="char-desc" class="cdesc"></span></div>
+      <div id="chars" class="chars"></div>
+      <div class="swrow"><div id="swatches" class="swatches"></div>
+        <label id="custom-wrap" class="sw custom" title="Pick any colour">🎨<input id="custom-color" type="color" value="#ff4d6d"></label></div>
+      <div class="small cosm">All flans are the same size, speed &amp; weight — looks only!</div>
+    </div>
     <div id="joinbox-link" class="hidden">
       <button id="btn-joinlink" class="big go">Join room <b id="linkcode"></b></button>
       <div class="or">or</div>
@@ -38,7 +45,7 @@
     </div>
     <div class="howto">
       <b>How to play</b> · Move: <kbd>WASD</kbd>/<kbd>↑↓←→</kbd> or hold mouse · Dash: <kbd>Space</kbd>/<kbd>Shift</kbd>/right-click ·
-      📱 Left thumb = joystick, right = DASH. Knock others off the shrinking cake. Last flan standing wins (+3), each knockout +1.
+      📱 Left thumb = joystick, right = DASH. Knock others off the shrinking cake. Watch out for ⚠️ crumbling chunks, the 🥄 giant spoon (hide in the middle!), 🍯 syrup, 💨 gusts; grab ⭐ for a Mega-Slam. Last flan standing wins (+3), each knockout +1.
     </div>
   </div>
 </div>
@@ -69,6 +76,7 @@
   <ol id="hud-score"></ol>
   <div id="feed"></div>
   <div id="center"></div>
+  <div id="banner"></div>
   <div id="spectate" class="hidden">You joined mid-round — you'll jump in next round! 👀</div>
 </div>
 
@@ -93,6 +101,7 @@
 <div id="toast"></div>
 <script src="config.js"></script>
 <script src="core.js"></script>
+<script src="flans.js"></script>
 <script src="game.js"></script>
 <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
 </body>
